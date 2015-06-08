@@ -168,9 +168,12 @@ projects[adminimal_theme][version] = "1.21"
 projects[adminimal_theme][subdir] = "contrib"
 
 ; styler
-projects[styler][type] = "theme"
-projects[styler][version] = "0.1"
-projects[styler][subdir] = "contrib"
+projects[styler][type] = theme
+projects[styler][download][type] = git
+projects[styler][download][url] = https://github.com/jamesbeat/styler.git
+projects[styler][download][branch] = "master"
+projects[styler][destination] = "themes"
+
 
 ; basic
 projects[basic][type] = "theme"

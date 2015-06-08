@@ -15,7 +15,7 @@ function drupaldrop_install() {
 	
 	
 	// NODE TYPE OPTIONS 
-	
+	/*
 	variable_set('node_options_page', array('status'));
 	// hide comments for this node
 	variable_set('comment_page', 'COMMENT_NODE_HIDDEN');
@@ -41,10 +41,9 @@ function drupaldrop_install() {
 	variable_set('admin_theme', 'seven');
 	variable_set('node_admin_theme', '1');
 	
-	variable_set('theme_default', 'drop');
+	variable_set('theme_default', 'styler');
 	variable_set('admin_theme', 'seven');
-	
-		
+			
 	variable_set("clean_url", 0);
 	
 	variable_set("date_default_timezone", 'Europe/Berlin');
@@ -67,7 +66,7 @@ function drupaldrop_install() {
 	variable_set('file_public_path', conf_path() . '/files');
 	variable_set('file_private_path', conf_path() . '/files/private');
 	variable_set('file_temporary_path', '/tmp');
- 
+ */
 
 
   // Create a default role for site administrators, with all available permissions assigned.
@@ -93,12 +92,14 @@ function drupaldrop_install() {
     ->execute();
 	*/
 	
-	drupladrop_create_text_formats();
-	drupladrop_create_content_types();
-	drupladrop_create_imagestyles();	
-	drupladrop_create_fields();
-	drupaldrop_enable_theme();
-	drupladrop_create_content();
+	dropguide_create_text_formats();
+	dropguide_create_content_types();
+	dropguide_create_imagestyles();	
+	dropguide_create_fields();
+	dropguide_create_taxomonies();
+	dropguide_enable_theme();
+	dropguide_create_content();
+
 	
 	 // Create a Menu link for STyleguide in the main menu.
 	  $guide = array(
@@ -182,25 +183,20 @@ function drupaldrop_enable_theme(){
       'cache' => -1,
     ),
     array(
-      'module' => 'user',
-      'delta' => 'new',
+      'module' => 'menu',
+      'delta' => 'menu-field-category',
       'theme' => $admin_theme,
       'status' => 1,
-      'weight' => 0,
-      'region' => 'dashboard_sidebar',
+      'weight' => 10,
+      'region' => 'sidebar_first',
       'pages' => '',
       'cache' => -1,
     ),
-    array(
-      'module' => 'search',
-      'delta' => 'form',
-      'theme' => $admin_theme,
-      'status' => 1,
-      'weight' => -10,
-      'region' => 'dashboard_sidebar',
-      'pages' => '',
-      'cache' => -1,
-    ),
+    
+
+    
+    
+    
   );
   $query = db_insert('block')->fields(array('module', 'delta', 'theme', 'status', 'weight', 'region', 'pages', 'cache'));
   foreach ($blocks as $block) {
@@ -229,7 +225,7 @@ function drupaldrop_enable_theme(){
 
 }
 
-function drupladrop_create_content($dir = 'content', $ext = 'html', $account = NULL) {  
+function dropguide_create_content($dir = 'content', $ext = 'html', $account = NULL) {  
   $path = dirname(__FILE__);
   
    $files = file_scan_directory($path . '/' . $dir, '/.*\.html$/');
@@ -245,7 +241,7 @@ function drupladrop_create_content($dir = 'content', $ext = 'html', $account = N
 	$title = preg_replace('/\\.[^.\\s]{3,4}$/', '', $file->filename);
 	$body = file_get_contents($path.'/'.$dir.'/'.$file->filename);
 	
-	drupladrop_create_node($count,'page',$title,$body);
+	dropguide_create_node($count,'page',$title,$body);
     
     print "Node ".$file->filename." imported";
     
@@ -259,7 +255,7 @@ function drupladrop_create_content($dir = 'content', $ext = 'html', $account = N
      	  		
 }
 
-function drupladrop_create_node($weight, $type, $title, $body){
+function dropguide_create_node($weight, $type, $title, $body){
 
 	$node = new stdClass(); // Create a new node object
 	$node->type = $type; // Or page, or whatever content type you like
@@ -304,7 +300,7 @@ function drupladrop_create_node($weight, $type, $title, $body){
 	
 }
 
-function drupladrop_create_imagestyles(){
+function dropguide_create_imagestyles(){
 	
 	$style = image_style_save(array('name' => 'retina','label' => 'Retina'));
 		
@@ -360,7 +356,7 @@ function drupladrop_create_imagestyles(){
 		
 }
 
-function drupladrop_create_content_types(){
+function dropguide_create_content_types(){
 	
 	// Insert default pre-defined node types into the database. For a complete
   // list of available node type attributes, refer to the node type API
@@ -381,6 +377,24 @@ function drupladrop_create_content_types(){
       'name' => st('Article'),
       'base' => 'node_content',
       'description' => st('Use <em>articles</em> for time-sensitive content like news, press releases or blog posts.'),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+    array(
+      'type' => 'text',
+      'name' => st('Text Section'),
+      'base' => 'node_content',
+      'description' => st('Use <em>Text Sections</em> for simple Text block with images.'),
+      'custom' => 1,
+      'modified' => 1,
+      'locked' => 0,
+    ),
+    array(
+      'type' => 'color_swatch',
+      'name' => st('Color Swatches'),
+      'base' => 'node_content',
+      'description' => st('Use <em>Color Swatches</em> to list colors.'),
       'custom' => 1,
       'modified' => 1,
       'locked' => 0,
@@ -424,7 +438,7 @@ function drupladrop_create_content_types(){
 
 }
 
-function drupladrop_create_fields(){
+function dropguide_create_fields(){
 	// Create a default vocabulary named "Tags", enabled for the 'article' content type.
   $description = st('Use tags to group articles on similar topics into categories.');
   $vocabulary = (object) array(
@@ -619,7 +633,7 @@ function drupladrop_create_fields(){
   return $field_bases;
 }
 
-function drupladrop_create_text_formats(){
+function dropguide_create_text_formats(){
 	
 	  // Add text formats.
   $filtered_html_format = array(
@@ -725,6 +739,105 @@ function drupladrop_create_text_formats(){
 	$filtered_html_permission = filter_permission_name($filtered_html_format);
 	user_role_grant_permissions(DRUPAL_ANONYMOUS_RID, array('access content', 'access comments', $filtered_html_permission));
 	user_role_grant_permissions(DRUPAL_AUTHENTICATED_RID, array('access content', 'access comments', 'post comments', 'skip comment approval',  $filtered_html_permission));
+	
+	
+}
+
+function dropguide_create_taxomonies() {
+	module_load_include('module', 'taxonomy', 'taxonomy');
+	$t = get_t();
+	
+		// Create the vocabulary programatically.
+	$vocab = array(
+	'name' => 'category',
+	'description' => $t('Category of the Content.'),
+	'relations' => 0,
+	'hierarchy' => 0,
+	'multiple' => 0,
+	'required' => 1,
+	'tags' => 0,
+	'module' => 'taxonomy',
+	'weight' => 0,
+	
+	);
+	
+	taxonomy_save_vocabulary($vocab);
+		
+	// define array to hold all Parent terms arrays
+	$parent_terms = array();
+	
+	// add some terms to the Parent terms array
+	// these 2 are the top level (parent) categories of the glossary
+	$parent_terms[] = array(
+		'name' => 'Styleguide', // the term
+		'vid' => $vocab, // the Vocabulary ID for this term
+		'description' => $t('Content of Styleguide'), // a description of the term
+	);
+	$parent_terms[] = array(
+		'name' => 'Anwendungsbeispiele',
+		'vid' => $vocab,
+		'description' => $t('Examples'),
+	);
+	$parent_terms[] = array(
+		'name' => 'Bibliothek',
+		'vid' => $vocab,
+		'description' => $t('Library'),
+	);
+	
+	// add parent terms to database
+	// we need to do this now so that we can get the IDs of these terms as
+	// perameters for their child terms
+	foreach ($parent_terms as $parent_term) {
+		taxonomy_save_term($parent_term);
+	}  
+	
+	
+	// Adding child terms to the previous parent terms
+	// First get the term id's of the parent terms we just created
+	$styleguide_term_id = db_result(
+		db_query(
+		  "SELECT tid FROM {term_data} WHERE vid = %d AND name = '%s' ",
+		  $vocab, 'Styleguide'
+		)
+	);
+	$examples_term_id = db_result(
+		db_query(
+		  "SELECT tid FROM {term_data} WHERE vid = %d AND name = '%s' ",
+		  $vocab, 'Anwendungsbeispiele'
+		)
+	);
+	$library_term_id = db_result(
+		db_query(
+		  "SELECT tid FROM {term_data} WHERE vid = %d AND name = '%s' ",
+		  $vocab, 'Bibliothek'
+		)
+	);
+	
+	
+	// define array to hold all Child terms arrays
+	$child_terms = array();
+	
+	// Add some child terms for the Military Terms Parent Category
+	$child_terms[] = array( 'name' => 'Grundelemente', 'vid' => $vocab, 'parent' => array($styleguide_term_id), 'description' => $t('Basic Elements'), 'weight' => 5);
+	$child_terms[] = array( 'name' => 'Visuelle Sprache', 'vid' => $vocab, 'parent' => array($styleguide_term_id), 'description' => $t('Visual Language'),  'weight' => 10);
+	$child_terms[] = array( 'name' => 'Online', 'vid' => $vocab, 'parent' => array($styleguide_term_id), 'description' => $t('Online Elements'),  'weight' => 15);
+	$child_terms[] = array( 'name' => 'Print', 'vid' => $vocab, 'parent' => array($styleguide_term_id), 'description' => $t('Print Elements'),  'weight' => 20);
+	$child_terms[] = array( 'name' => 'Sonstiges', 'vid' => $vocab, 'parent' => array($styleguide_term_id), 'description' => $t('Other'),  'weight' => 25);
+
+	$child_terms[] = array( 'name' => 'Print', 'vid' => $vocab, 'parent' => array($examples_term_id ), 'description' => $t('Basic Elements'), 'weight' => 30);
+	$child_terms[] = array( 'name' => 'Online', 'vid' => $vocab, 'parent' => array($examples_term_id ), 'description' => $t('Basic Elements'), 'weight' => 35);
+	$child_terms[] = array( 'name' => 'Outdoor', 'vid' => $vocab, 'parent' => array($examples_term_id ), 'description' => $t('Basic Elements'), 'weight' => 40);
+	$child_terms[] = array( 'name' => 'Sonstiges', 'vid' => $vocab, 'parent' => array($examples_term_id ), 'description' => $t('Basic Elements'), 'weight' => 45);
+	
+	$child_terms[] = array( 'name' => 'Assets', 'vid' => $vocab, 'parent' => array($library_term_id), 'description' => $t('Assets'), 'weight' => 50);
+	$child_terms[] = array( 'name' => 'Designvorlagen', 'vid' => $vocab, 'parent' => array($library_term_id), 'description' => $t('Design Templates'), 'weight' => 55);
+	
+		
+	
+	// Add the child terms to the database
+	foreach ($child_terms as $child_term) {
+		taxonomy_save_term($child_term);
+	}
 }
 
 ?>
