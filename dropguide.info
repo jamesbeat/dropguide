@@ -1,4 +1,4 @@
-; Packaging information for institut_bauen_und_umwelt_e_v_
+; Packaging information for Drop Guide
 name = "Drop Guide"
 description = "Corporate Design Manual"
 exclusive = "1"
@@ -317,7 +317,6 @@ variables[file_entity_alt] = '[file:field_file_image_alt_text]'
 variables[file_entity_default_allowed_extensions] = 'jpg jpeg gif png txt doc docx xls xlsx pdf ppt pptx pps ppsx odt ods odp mp3 mov mp4 m4a m4v mpeg avi ogg oga ogv weba webp webm ai eps indd svg zip gzip'
 variables[file_entity_title] = '[file:field_file_image_title_text]'
 variables[filter_fallback_format] = 'plain_text'
-variables[focal_point_test_drive_image] = '1'
 variables[imagemagick_convert] = 'convert'
 variables[imagemagick_debug] = 1
 variables[imagemagick_quality] = '75'

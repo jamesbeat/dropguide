@@ -69,11 +69,11 @@ read -e -p "Site Locale (Format: de, en etc.): " siteLocale
 
 $ECHO "-------------- MAKE DISTRIBUTION -----------------"
 
-drush make drupalguide.build -y
+drush make dropguide.build -y
 
 $ECHO "--------------INSTALLING DRUPALDROP -----------------" 
 
-drush site-install -y drupalguide --account-mail=$userMail --account-name=$userName --account-pass=$userPass --site-name=$siteName --site-mail=$userMail --locale=$siteLocale --db-url=mysql://$dbUser:$dbPass@$MyHOST:3306/$dbName  --db-su=$MyUSER --db-su-pw=$MyPASS install_configure_form.update_status_module='array(FALSE,FALSE)' --debug 
+drush site-install -y dropguide --account-mail=$userMail --account-name=$userName --account-pass=$userPass --site-name=$siteName --site-mail=$userMail --locale=$siteLocale --db-url=mysql://$dbUser:$dbPass@$MyHOST:3306/$dbName  --db-su=$MyUSER --db-su-pw=$MyPASS install_configure_form.update_status_module='array(FALSE,FALSE)' --debug 
 
 $ECHO "-------------- LOCALIZATION -----------------" 
 

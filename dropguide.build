@@ -3,7 +3,7 @@ api = 2
 projects[] = drupal
 
 ; Distribution
-projects[drupaldrop][type] = "profile"
-projects[drupaldrop][download][type] = "git"
-projects[drupaldrop][download][url] = "https://github.com/jamesbeat/dropguide.git"
-projects[drupaldrop][download][branch] = "master"
+projects[dropguide][type] = "profile"
+projects[dropguide][download][type] = "git"
+projects[dropguide][download][url] = "https://github.com/jamesbeat/dropguide.git"
+projects[dropguide][download][branch] = "master"
